@@ -1,0 +1,11 @@
+--- a/tools/lirc-lsremotes.cpp
++++ b/tools/lirc-lsremotes.cpp
+@@ -15,6 +15,10 @@
+ #include <glob.h>
++#ifndef GLOB_BRACE
++#  define GLOB_BRACE 0
++#endif
++
+ #include <libgen.h>
+ #include <limits.h>
+ #include <stdio.h>

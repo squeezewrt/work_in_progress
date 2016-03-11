@@ -72,6 +72,19 @@ define Package/lirc-drv-default/description
  This package contains LIRC default driver
 endef
 
+define KernelPackage/mceusb
+#  SUBMENU:=Remote control support
+  TITLE:=Windows Media Center Ed. eHome Infrared Transceiver
+#  DEPENDS:=@USB_SUPPORT
+  KCONFIG:=CONFIG_IR_MCEUSB
+  FILES:=$(LINUX_DIR)/drivers/media/rc/mceusb.ko
+  AUTOLOAD:=$(call AutoProbe,mceusb)
+endef
+
+define KernelPackage/mceusb/description
+  This package contains driver for the Windows Media Center Ed. eHome Infrared Transceiver
+endef
+
 CONFIGURE_ARGS += --without-x --disable-static 
 
 DESTDIR = $(PKG_INSTALL_DIR)
@@ -134,3 +147,4 @@ $(eval $(call BuildPackage,lirc))
 $(eval $(call BuildPackage,lirc-tools))
 $(eval $(call BuildPackage,lirc-drv-devinput))
 $(eval $(call BuildPackage,lirc-drv-default))
+$(eval $(call KernelPackage,mceusb))

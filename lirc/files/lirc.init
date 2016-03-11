@@ -7,9 +7,16 @@ STOP=2
 USE_PROCD=1
 PROG=/usr/sbin/lircd
 RUNDIR=/var/run/lirc
+CFGFILE=$RUNDIR/lircd.conf
+
+create_config_files() {
+	echo > "$CFGFILE"
+}
 
 make_cmdline() {
 	cmdline=" -n -D5"
+
+	cmdline="$cmdline $CFGFILE"
 }
 
 start_service() {
@@ -22,6 +29,9 @@ start_service() {
 	rm -rf "$RUNDIR"
 	mkdir -m 0777 -p "$RUNDIR"
 
+	#create config file(s)
+	create_config_files
+
 	# Build command params
 	make_cmdline
 
@@ -32,12 +42,12 @@ start_service() {
 }
 
 stop_service() {
+	sleep 2
 	rm -rf "$RUNDIR"
 }
 
 reload_service() {
 	stop
-	sleep 2
 	start
 }
 

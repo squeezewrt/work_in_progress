@@ -1,1 +1,46 @@
-#
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2015 OpenWrt.org
+
+START=88
+STOP=2
+
+USE_PROCD=1
+PROG=/usr/sbin/lircd
+RUNDIR=/var/run/lirc
+
+make_cmdline() {
+	cmdline=" -n -D5"
+}
+
+start_service() {
+	config_load lirc
+
+	config_get_bool enabled options 'enabled' 0
+	[ $enabled -eq 0 ] && return
+	
+	# Create directory for socket and pid
+	rm -rf "$RUNDIR"
+	mkdir -m 0777 -p "$RUNDIR"
+
+	# Build command params
+	make_cmdline
+
+	procd_open_instance
+	logger -t 'lirc' "$cmdline"
+	procd_set_param command "$PROG" $cmdline
+	procd_close_instance
+}
+
+stop_service() {
+	rm -rf "$RUNDIR"
+}
+
+reload_service() {
+	stop
+	sleep 2
+	start
+}
+
+restart() {
+	reload_service
+}
